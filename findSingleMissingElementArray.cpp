@@ -58,5 +58,23 @@ int main()
             cout << "Missing Element: " << l << endl;
         }
     }
+    
+    int arr3[size] = {6,7,8,10,11,12,15,16,17,18};
+    
+    int diff = arr3[0];
+    
+    for(int m=0; m < size; m++)
+    {
+        if(arr3[m] - m != diff)
+        {
+            int count = arr3[m] - arr3[m-1];
+            while(count > 1){
+                cout << "Missing Element: " << (diff+m) << endl;
+                diff++;
+                count--;
+            }
+        }
+    }
+    
     return 0;
 }
