@@ -1,12 +1,5 @@
-/******************************************************************************
 
-Welcome to GDB Online.
-GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
-C#, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
-Code, Compile, Run and Debug online from anywhere in world.
-
-*******************************************************************************/
-#include <iostream.h>
+#include <iostream>
 using namespace std;
 
 class Element
@@ -24,14 +17,19 @@ private:
     int numOfCols;
     int numOfNonZeroEle;
     Element *ele; // array of non-zero elements
-    ele = new Element[numOfNonZeroEle];
     
 public:
-    Sparse(int numOfRows, numOfCols, numOfNonZeroEle)
+    Sparse(int numOfRows, int numOfCols, int numOfNonZeroEle)
     {
         this->numOfRows = numOfRows;
         this->numOfCols = numOfCols;
         this->numOfNonZeroEle = numOfNonZeroEle;
+        
+        ele = new Element[numOfNonZeroEle];
+    }
+    ~Sparse()
+    {
+        delete [] ele;
     }
     
     void read()
@@ -39,13 +37,14 @@ public:
         cout << "Enter the rownum, colnum and its value ";
         for(int i=0; i < numOfNonZeroEle; i++)
         {
-            cin >> ele[i].row >> ele[i].col >> ele[i].value;
+            cin >> ele[i].row >> ele[i].col >> ele[i].val;
         }
     }
     
     void display()
     {
-        cout << "The Sparse Matrix elements are: ";
+        int k = 0;
+        cout << "The Sparse Matrix elements are: " << endl;
         
         for(int i=0; i < numOfRows; i++)
         {
@@ -54,6 +53,10 @@ public:
                 if(ele[k].row==i && ele[k].col==j)
                 {
                     cout << ele[k++].val << " ";
+                }
+                else
+                {
+                    cout << "0" << " ";
                 }
             }
             cout << endl;
