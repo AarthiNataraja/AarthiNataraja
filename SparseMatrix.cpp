@@ -1,4 +1,3 @@
-
 #include <iostream>
 using namespace std;
 
@@ -27,6 +26,7 @@ public:
         
         ele = new Element[numOfNonZeroEle];
     }
+    
     ~Sparse()
     {
         delete [] ele;
@@ -62,7 +62,96 @@ public:
             cout << endl;
         }
     }
+    
+    friend istream & operator>>(istream& is, Sparse &s);
+    friend ostream & operator<<(ostream& os, Sparse &s);
+    
+    Sparse operator+(Sparse &s);
 };
+
+istream & operator>>(istream& is, Sparse &s)
+{
+    cout << "Enter the Elements of Sparse matrix " << endl;
+    for(int i=0; i < s.numOfNonZeroEle; i++)
+    {
+        cin >> s.ele[i].row >> s.ele[i].col >> s.ele[i].val;
+    }
+    
+    return is;
+}
+
+ostream & operator<<(ostream& os, Sparse &s)
+{
+    cout << "The Sparse Martix is, " << endl;
+    int k=0;
+    for(int i=0; i < s.numOfRows; i++)
+    {
+        for(int j=0; j < s.numOfCols; j++)
+        {
+            if(s.ele[k].row==i && s.ele[k].col==j)
+            {
+                cout << s.ele[k++].val << " ";
+            }
+            else
+            {
+                cout << "0" << " ";
+            }
+        }
+        cout << endl;
+    }
+    
+    return os;
+}
+
+Sparse Sparse::operator+(Sparse &s)
+{
+    int i=0,j=0,k=0;
+    Sparse *sum = new Sparse(numOfRows, numOfCols, numOfNonZeroEle+s.numOfNonZeroEle);
+    
+    if(numOfRows!=s.numOfRows || numOfCols!=s.numOfCols)
+    {
+        //return ;
+    }
+    
+    while(i<numOfNonZeroEle && j<s.numOfNonZeroEle)
+    {
+        if(ele[i].row < s.ele[j].row)
+        {
+            sum->ele[k++] = ele[i++];
+        }
+        else if(ele[i].row > s.ele[j].row)
+        {
+            sum->ele[k++] = s.ele[j++];
+        }
+        else
+        {
+            if(ele[i].col < s.ele[j].col)
+            {
+                sum->ele[k++] = ele[i++];
+            }
+            else if(ele[i].col > s.ele[j].col)
+            {
+                sum->ele[k++] = s.ele[j++];
+            }
+            else
+            {
+                sum->ele[k] = ele[i];
+                sum->ele[k++].val = ele[i++].val+s.ele[j++].val;
+            }
+        }
+    }
+    for(; i<numOfNonZeroEle; i++)
+    {
+        sum->ele[k++] = ele[i];
+    }
+    for(; j<s.numOfNonZeroEle; j++)
+    {
+        sum->ele[k++] = s.ele[j];
+    }
+    sum->numOfNonZeroEle = k;
+    
+    return *sum;
+}
 
 int main()
 {
@@ -70,5 +159,13 @@ int main()
     S.read();
     S.display();
 
+    Sparse s1(5,5,5);
+    cin >> s1;
+    cout << s1;
+    
+    Sparse s2 = S + s1;
+    
+    cout << s2;
+    
     return 0;
 }
